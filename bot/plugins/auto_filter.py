@@ -15,9 +15,9 @@ INVITE_LINK = {}
 ACTIVE_CHATS = {}
 db = Database()
 
-reply_markups = InlineKeyboardMarkup(buttons1)
+reply_markups = InlineKeyboardMarkup(buttons)
 
-buttons1 = [[
+buttons = [[
         InlineKeyboardButton('Home ⚡', callback_data='start'),
         InlineKeyboardButton('About 🚩', callback_data='about')
     ],[
