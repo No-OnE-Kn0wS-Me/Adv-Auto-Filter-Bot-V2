@@ -3,7 +3,10 @@
 # (c) @AlbertEinsteinTG
 
 class Translation(object):
-    
+    NO_FILTER_FOUND = """ Please Request In Correct Format 
+
+
+"""
     START_TEXT = """<b>Hey {}!!</b>
 <i>Am Just A Advance Auto Filter Bot....😉
 
