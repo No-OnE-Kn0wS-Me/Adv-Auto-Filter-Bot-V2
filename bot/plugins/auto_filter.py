@@ -15,14 +15,6 @@ INVITE_LINK = {}
 ACTIVE_CHATS = {}
 db = Database()
 
-reply_markups = InlineKeyboardMarkup(buttons)
-
-buttons = [[
-        InlineKeyboardButton('Home ⚡', callback_data='start'),
-        InlineKeyboardButton('About 🚩', callback_data='about')
-    ],[
-        InlineKeyboardButton('Close 🔐', callback_data='close')
-    ]]
 
 @Bot.on_message(filters.text & filters.group, group=0)
 async def auto_filter(bot, update):
@@ -119,10 +111,19 @@ async def auto_filter(bot, update):
         await bot.send_message(
         chat_id=update.chat.id,
         text=Translation.NO_FILTER_FOUND,
-        reply_markup=reply_markups,
         parse_mode="html",
-        reply_to_message_id=update.message_id
-    )
+        reply_to_message_id=update.message_id,
+        reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton
+                                (
+                                    'Developers', url="https://t.me/CrazyBotsz"
+                                )
+                        ]
+                    ]
+                )
+            )
 
     if len(results) == 0: # double check
         return
