@@ -8,12 +8,13 @@ from pyrogram.errors import ButtonDataInvalid, FloodWait
 
 from bot.database import Database # pylint: disable=import-error
 from bot.bot import Bot # pylint: disable=import-error
-
+from bot import Translation
 
 FIND = {}
 INVITE_LINK = {}
 ACTIVE_CHATS = {}
 db = Database()
+
 
 @Bot.on_message(filters.text & filters.group, group=0)
 async def auto_filter(bot, update):
@@ -107,8 +108,22 @@ async def auto_filter(bot, update):
             )
         
     else:
-        return # return if no files found for that query
-    
+        await bot.send_message(
+        chat_id=update.chat.id,
+        text=Translation.NO_FILTER_FOUND,
+        parse_mode="html",
+        reply_to_message_id=update.message_id,
+        reply_markup=InlineKeyboardMarkup(
+                    [
+                        [
+                            InlineKeyboardButton
+                                (
+                                    'Developers', url="https://t.me/CrazyBotsz"
+                                )
+                        ]
+                    ]
+                )
+            )
 
     if len(results) == 0: # double check
         return
