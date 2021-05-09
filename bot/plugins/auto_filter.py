@@ -106,7 +106,13 @@ async def auto_filter(bot, update):
                 ]
             )
 
-        reply_markup=InlineKeyboardMarkup(
+        
+    else:
+        send_msg = await bot.send_message(
+        rcv_msg = update.text, 
+        chat_id = update.chat.id,
+        text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ബോട്ടിൽ ചോദിക്കു..</b>",
+        reply_markup=reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton
@@ -115,13 +121,7 @@ async def auto_filter(bot, update):
                                 )
                         ]
                     ]
-                )
-    else:
-        send_msg = await bot.send_message(
-        rcv_msg = update.text, 
-        chat_id = update.chat.id,
-        text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ബോട്ടിൽ ചോദിക്കു..</b>",
-        reply_markup=reply_markup,
+                ),
         parse_mode="html",
         reply_to_message_id= (update.message_id) if (update.reply_to_message == None) else (update.reply_to_message.message_id) 
      ) 
