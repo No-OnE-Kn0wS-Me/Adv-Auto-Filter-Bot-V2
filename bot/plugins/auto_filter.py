@@ -112,7 +112,7 @@ async def auto_filter(bot, update):
         rcv_msg = update.text, 
         chat_id = update.chat.id,
         text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ബോട്ടിൽ ചോദിക്കു..</b>",
-        reply_markup=reply_markup=InlineKeyboardMarkup(
+        reply_markup=InlineKeyboardMarkup(
                     [
                         [
                             InlineKeyboardButton
