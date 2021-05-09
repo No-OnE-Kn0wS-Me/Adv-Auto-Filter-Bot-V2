@@ -60,10 +60,35 @@ async def auto_filter(bot, update):
     filters = await db.get_filters(group_id, query)
     
     if filters:
+        results.append(
+                [
+                    InlineKeyboardButton(" ▶️Join Our Channel📽️", url="https://t.me/filmcityhd2")
+                ]
+            )
         for filter in filters: # iterating through each files
             file_name = filter.get("file_name")
             file_type = filter.get("file_type")
             file_link = filter.get("file_link")
+            file_size = int(filter.get("file_size", ""))
+            file_size = round((file_size/1024),2) # from B to KB
+            size = ""
+            file_KB = ""
+            file_MB = ""
+            file_GB = ""
+            
+            if file_size < 1024:
+                file_KB = f"[{str(round(file_size,2))} KB]"
+                size = file_KB
+            elif file_size < (1024*1024):
+                file_MB = f"[{str(round((file_size/1024),2))} MB]"
+                size = file_MB
+            else:
+                file_GB = f"[{str(round((file_size/(1024*1024)),2))} GB]"
+                size = file_GB
+                
+            file_name = size + " 📂 " + file_name
+            
+            print(file_name)
             
             if file_type == "video":
                 if allow_video: 
@@ -110,7 +135,7 @@ async def auto_filter(bot, update):
     else:
         send_msg = await bot.send_message( 
         chat_id = update.chat.id,
-        text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ഗ്രൂപ്പിൽ ചോദിക്കു..</b>",
+        text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n മലയാളത്തിൽ Req ചെയ്താലും മൂവി കിട്ടില്ല! \n ഈ മെസ്സേജ് 1 മിനിറ്റിനുള്ളിൽ ഡിലീറ്റ് ആകുന്നതായിരിക്കും ശരിയായ രീതിയിൽ Req ഇട്ടിട്ടും കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ഗ്രൂപ്പിൽ ചോദിക്കു..</b>",
         reply_markup=InlineKeyboardMarkup(
                     [
                         [
@@ -126,7 +151,8 @@ async def auto_filter(bot, update):
      ) 
         await asyncio.sleep(30)
         await send_msg.delete()    
-        
+        await bot.delete_messages(update.chat.id,update.message_id)
+
 
     if len(results) == 0: # double check
         return
@@ -207,6 +233,9 @@ async def auto_filter(bot, update):
                 parse_mode="html",
                 reply_to_message_id=update.message_id
             )
+             await asyncio.sleep(10)    
+             await bot.delete_messages(update.chat.id,update.message_id)
+
 
         except ButtonDataInvalid:
             print(result[0])
