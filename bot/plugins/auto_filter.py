@@ -108,8 +108,7 @@ async def auto_filter(bot, update):
 
         
     else:
-        send_msg = await bot.send_message(
-        rcv_msg = update.text, 
+        send_msg = await bot.send_message( 
         chat_id = update.chat.id,
         text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ബോട്ടിൽ ചോദിക്കു..</b>",
         reply_markup=InlineKeyboardMarkup(
@@ -127,7 +126,7 @@ async def auto_filter(bot, update):
      ) 
         await asyncio.sleep(10)
         await send_msg.delete()    
-        await rcv_msg.delete()
+        
 
     if len(results) == 0: # double check
         return
