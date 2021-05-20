@@ -15,7 +15,7 @@ INVITE_LINK = {}
 ACTIVE_CHATS = {}
 db = Database()
 
-@Bot.on_message(filters.text & filters.group, group=0)
+@Bot.on_message(filters.text & filters.group & ~filters.bot, group=0)
 async def auto_filter(bot, update):
     """
     A Funtion To Handle Incoming Text And Reply With Appropriate Results
@@ -60,36 +60,30 @@ async def auto_filter(bot, update):
     filters = await db.get_filters(group_id, query)
     
     if filters:
-        results.append(
-                [
-                    InlineKeyboardButton(" ▶️Join Our Channel📽️", url="https://t.me/filmcityhd2")
-                ]
-            )
         for filter in filters: # iterating through each files
             file_name = filter.get("file_name")
             file_type = filter.get("file_type")
             file_link = filter.get("file_link")
-            file_size = int(filter.get("file_size", ""))
-            file_size = round((file_size/1024),2) # from B to KB
-            size = ""
-            file_KB = ""
-            file_MB = ""
-            file_GB = ""
+            file_size = int(filter.get("file_size", "0"))
+            
+            # from B to MiB
             
             if file_size < 1024:
-                file_KB = f"[{str(round(file_size,2))} KB]"
-                size = file_KB
-            elif file_size < (1024*1024):
-                file_MB = f"[{str(round((file_size/1024),2))} MB]"
-                size = file_MB
-            else:
-                file_GB = f"[{str(round((file_size/(1024*1024)),2))} GB]"
-                size = file_GB
-                
-            file_name = size + " 📂 " + file_name
+                file_size = f"[{file_size} B]"
+            elif file_size < (1024**2):
+                file_size = f"[{str(round(file_size/1024, 2))} KiB] "
+            elif file_size < (1024**3):
+                file_size = f"[{str(round(file_size/(1024**2), 2))} MiB] "
+            elif file_size < (1024**4):
+                file_size = f"[{str(round(file_size/(1024**3), 2))} GiB] "
             
-            print(file_name)
             
+            file_size = "" if file_size == ("[0 B]") else file_size
+            
+            # add emoji down below inside " " if you want..
+            button_text = f"{file_size}{file_name}"
+            
+
             if file_type == "video":
                 if allow_video: 
                     pass
@@ -127,32 +121,13 @@ async def auto_filter(bot, update):
             
             results.append(
                 [
-                    InlineKeyboardButton(file_name, url=file_link)
+                    InlineKeyboardButton(button_text, url=file_link)
                 ]
             )
-
         
     else:
-        send_msg = await bot.send_message( 
-        chat_id = update.chat.id,
-        text=f" <b>Couldn't Find This Movie.Try Again ഈ സിനിമയുടെ ഒറിജിനൽ പേര് ഗൂഗിളിൽ പോയി കണ്ടെത്തി അതുപോലെ ഇവിടെ കൊടുക്കുക 🥺\n മലയാളത്തിൽ Req ചെയ്താലും മൂവി കിട്ടില്ല! \n ഈ മെസ്സേജ് 1 മിനിറ്റിനുള്ളിൽ ഡിലീറ്റ് ആകുന്നതായിരിക്കും ശരിയായ രീതിയിൽ Req ഇട്ടിട്ടും കിട്ടിയില്ലേൽ താഴെ കാണുന്ന ബട്ടണിൽ ഉള്ള ഗ്രൂപ്പിൽ ചോദിക്കു..</b>",
-        reply_markup=InlineKeyboardMarkup(
-                    [
-                        [
-                            InlineKeyboardButton
-                                (
-                                    'Group', url="https://t.me/joinchat/grZCwTbRQUA0Zjk1"
-                                )
-                        ]
-                    ]
-                ),
-        parse_mode="html",
-        reply_to_message_id= (update.message_id) if (update.reply_to_message == None) else (update.reply_to_message.message_id) 
-     ) 
-        await asyncio.sleep(30)
-        await send_msg.delete()    
-        await bot.delete_messages(update.chat.id,update.message_id)
-
+        return # return if no files found for that query
+    
 
     if len(results) == 0: # double check
         return
@@ -232,10 +207,7 @@ async def auto_filter(bot, update):
                 reply_markup=reply_markup,
                 parse_mode="html",
                 reply_to_message_id=update.message_id
-            ) 
-            await asyncio.sleep(30)
-            await bot.delete_messages(update.chat.id,update.message_id)
-
+            )
 
         except ButtonDataInvalid:
             print(result[0])
